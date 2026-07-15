@@ -92,3 +92,27 @@ export async function deleteIdea(formData: FormData) {
   revalidatePath("/dashboard");
   return { success: true };
 }
+
+export async function toggleShare(id: string, isPublic: boolean) {
+  const session = await getServerSession(authOptions);
+  
+  if (!session?.user?.id) {
+    return { error: "Unauthorized" };
+  }
+
+  const existingIdea = await prisma.idea.findUnique({
+    where: { id },
+  });
+
+  if (!existingIdea || existingIdea.userId !== session.user.id) {
+    return { error: "Idea not found or unauthorized" };
+  }
+
+  await prisma.idea.update({
+    where: { id },
+    data: { isPublic },
+  });
+
+  revalidatePath(`/dashboard/ideas/${id}`);
+  return { success: true };
+}

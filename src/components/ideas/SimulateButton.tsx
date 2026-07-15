@@ -1,33 +1,70 @@
 "use client";
 
 import { useState } from "react";
-import { simulateFailureMode } from "@/app/actions/ai";
-// using native buttons for theme
+import { useCompletion } from "@ai-sdk/react";
+import ReactMarkdown from "react-markdown";
 
 export function SimulateButton({ ideaId, ideaTitle, ideaDescription }: { ideaId: string, ideaTitle: string, ideaDescription: string }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [persona, setPersona] = useState("Default");
 
-  async function handleSimulate() {
-    setLoading(true);
-    setError("");
-    const res = await simulateFailureMode(ideaId, ideaTitle, ideaDescription);
-    if (res?.error) {
-      setError(res.error);
+  const { complete, completion, isLoading, error } = useCompletion({
+    api: '/api/simulate',
+    body: {
+      ideaId,
+      title: ideaTitle,
+      description: ideaDescription,
+      persona
+    },
+    onFinish: () => {
+      // Reload page to show the saved simulation at the bottom
+      window.location.reload();
     }
-    setLoading(false);
-  }
+  });
 
   return (
-    <div className="flex flex-col items-end gap-2">
-      <button 
-        onClick={handleSimulate} 
-        disabled={loading}
-        className="ft-btn-primary"
-      >
-        {loading ? "Simulating Failure Mode..." : "Run New Simulation"}
-      </button>
-      {error && <div className="text-red-500 text-sm">{error}</div>}
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col sm:flex-row items-end gap-2 justify-end w-full">
+        <div className="flex flex-col gap-1 text-sm">
+          <label htmlFor="persona-select" className="ft-eyebrow text-[var(--ft-text-dim)]">Select Persona</label>
+          <select 
+            id="persona-select"
+            value={persona} 
+            onChange={(e) => setPersona(e.target.value)}
+            disabled={isLoading}
+            className="ft-input p-2 rounded bg-black/50 border border-[var(--ft-line)] text-white"
+          >
+            <option value="Default">The Realist (Default)</option>
+            <option value="The Ruthless VC">The Ruthless VC</option>
+            <option value="The Apathetic Customer">The Apathetic Customer</option>
+            <option value="The Regulatory Auditor">The Regulatory Auditor</option>
+          </select>
+        </div>
+        <button 
+          onClick={() => complete(ideaTitle)} 
+          disabled={isLoading}
+          className="ft-btn-primary"
+        >
+          {isLoading ? "Simulating..." : "Run New Simulation"}
+        </button>
+      </div>
+      
+      {error && <div className="text-red-500 text-sm">{error.message}</div>}
+
+      {completion && (
+        <div className="ft-panel p-6 mt-4 border border-[var(--ft-accent)]">
+          <div className="ft-corner ft-corner-tl"></div>
+          <div className="ft-corner ft-corner-tr"></div>
+          <div className="ft-corner ft-corner-bl"></div>
+          <div className="ft-corner ft-corner-br"></div>
+          <div className="text-sm ft-eyebrow mb-4 text-[var(--ft-accent)] flex justify-between">
+            <span>Streaming Simulation...</span>
+            <span className="animate-pulse">●</span>
+          </div>
+          <div className="text-[var(--ft-text)] max-w-none whitespace-pre-wrap leading-relaxed prose prose-invert prose-p:text-slate-300 prose-headings:text-slate-100 prose-strong:text-slate-200">
+            <ReactMarkdown>{completion}</ReactMarkdown>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
