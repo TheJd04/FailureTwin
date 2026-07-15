@@ -4,20 +4,33 @@ import { Idea } from "@prisma/client";
 import { deleteIdea } from "@/app/actions/ideas";
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
 
-export function IdeaCard({ idea }: { idea: Idea }) {
+export function IdeaCard({ idea, index }: { idea: Idea, index: number }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
     setIsDeleting(true);
-    const formData = new FormData();
-    formData.append("id", idea.id);
-    await deleteIdea(formData);
-    setIsDeleting(false);
+    try {
+      const formData = new FormData();
+      formData.append("id", idea.id);
+      await deleteIdea(formData);
+      toast.success("Idea deleted successfully");
+    } catch {
+      toast.error("Failed to delete idea");
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   return (
-    <div className="ft-panel p-6 flex flex-col h-full relative">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
+      className="ft-panel p-6 flex flex-col h-full relative"
+    >
       <div className="ft-corner ft-corner-tl"></div>
       <div className="ft-corner ft-corner-tr"></div>
       <div className="ft-corner ft-corner-bl"></div>
@@ -47,6 +60,6 @@ export function IdeaCard({ idea }: { idea: Idea }) {
           </button>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }

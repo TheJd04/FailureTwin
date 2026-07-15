@@ -4,9 +4,8 @@ import { useState } from "react";
 import { updateIdea, toggleShare } from "@/app/actions/ideas";
 // Removed Button import
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import { Copy, Check } from "lucide-react";
 
 export function IdeaActions({ idea }: { idea: { id: string, title: string, description: string, isPublic: boolean } }) {
@@ -23,9 +22,11 @@ export function IdeaActions({ idea }: { idea: { id: string, title: string, descr
     const res = await updateIdea(formData);
     if (res?.error) {
       setError(res.error);
+      toast.error(res.error);
     } else {
       setEditOpen(false);
       setError("");
+      toast.success("Idea pivoted successfully");
     }
   }
 
@@ -34,6 +35,13 @@ export function IdeaActions({ idea }: { idea: { id: string, title: string, descr
     const res = await toggleShare(idea.id, !isPublic);
     if (res?.success) {
       setIsPublic(!isPublic);
+      if (!isPublic) {
+        toast.success("Idea is now public");
+      } else {
+        toast.info("Idea is now private");
+      }
+    } else {
+      toast.error("Failed to update share settings");
     }
     setIsSharing(false);
   }
@@ -41,6 +49,7 @@ export function IdeaActions({ idea }: { idea: { id: string, title: string, descr
   function copyToClipboard() {
     navigator.clipboard.writeText(shareUrl);
     setIsCopied(true);
+    toast.success("Link copied to clipboard");
     setTimeout(() => setIsCopied(false), 2000);
   }
 
@@ -52,25 +61,25 @@ export function IdeaActions({ idea }: { idea: { id: string, title: string, descr
         </DialogTrigger>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Pivot Startup Idea</DialogTitle>
+            <DialogTitle className="ft-wordmark text-2xl tracking-tight">PIVOT STARTUP IDEA</DialogTitle>
           </DialogHeader>
-          <form action={handleEdit} className="flex flex-col gap-4">
-            {error && <div className="text-red-500 text-sm bg-red-50 p-2 rounded">{error}</div>}
+          <form action={handleEdit} className="flex flex-col gap-6 mt-4">
+            {error && <div className="text-[var(--ft-critical)] text-sm bg-[var(--ft-critical)]/10 p-3 border border-[var(--ft-critical)]/30">{error}</div>}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" name="title" defaultValue={idea.title} required className="ft-input bg-black/50" />
+              <Label htmlFor="title" className="ft-eyebrow">Project Title</Label>
+              <input id="title" name="title" defaultValue={idea.title} required className="ft-input bg-black/50" />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea 
+              <Label htmlFor="description" className="ft-eyebrow">Core Directive / Description</Label>
+              <textarea 
                 id="description" 
                 name="description" 
                 defaultValue={idea.description}
                 required 
-                className="min-h-[150px] ft-input bg-black/50"
+                className="ft-input bg-black/50 min-h-[150px]"
               />
             </div>
-            <button type="submit" className="ft-btn-primary mt-2">Save Changes</button>
+            <button type="submit" className="ft-btn-primary w-full justify-center mt-2 text-center text-sm py-3">SAVE CHANGES</button>
           </form>
         </DialogContent>
       </Dialog>

@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { createIdea } from "@/app/actions/ideas";
 // import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
+import { toast } from "sonner";
 
 export function CreateIdeaForm() {
   const [open, setOpen] = useState(false);
@@ -16,38 +16,40 @@ export function CreateIdeaForm() {
     const res = await createIdea(formData);
     if (res?.error) {
       setError(res.error);
+      toast.error(res.error);
     } else {
       setOpen(false);
       setError("");
+      toast.success("Idea created successfully");
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="ft-btn-primary">
-        Add New Idea
+        + INITIALIZE NEW IDEA
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create Startup Idea</DialogTitle>
+          <DialogTitle className="ft-wordmark text-2xl tracking-tight">CREATE STARTUP IDEA</DialogTitle>
         </DialogHeader>
-        <form action={handleSubmit} className="flex flex-col gap-4">
-          {error && <div className="text-red-500 text-sm bg-red-50 p-2 rounded">{error}</div>}
+        <form action={handleSubmit} className="flex flex-col gap-6 mt-4">
+          {error && <div className="text-[var(--ft-critical)] text-sm bg-[var(--ft-critical)]/10 p-3 border border-[var(--ft-critical)]/30">{error}</div>}
           <div className="flex flex-col gap-2">
-            <Label htmlFor="title">Title</Label>
-            <Input id="title" name="title" required placeholder="e.g. Uber for dogs" />
+            <Label htmlFor="title" className="ft-eyebrow">Project Title</Label>
+            <input id="title" name="title" required placeholder="e.g. Uber for dogs" className="ft-input" />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea 
+            <Label htmlFor="description" className="ft-eyebrow">Core Directive / Description</Label>
+            <textarea 
               id="description" 
               name="description" 
               required 
               placeholder="Describe what the product does and who it's for..."
-              className="min-h-[100px]"
+              className="ft-input min-h-[140px]"
             />
           </div>
-          <button type="submit" className="ft-btn-primary mt-2">Save Idea</button>
+          <button type="submit" className="ft-btn-primary w-full justify-center mt-2 text-center text-sm py-3">SAVE DIRECTIVE</button>
         </form>
       </DialogContent>
     </Dialog>

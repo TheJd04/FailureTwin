@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Navbar } from "@/components/Navbar";
 import NetworkBackground from "@/components/ui/NetworkBackground";
+import { Toaster } from "sonner";
 
 const ibmPlexSans = IBM_Plex_Sans({ 
   subsets: ["latin"],
@@ -43,6 +44,14 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
+          <Toaster theme="dark" position="bottom-right" toastOptions={{
+            style: {
+              background: 'var(--ft-surface-raised)',
+              border: '1px solid var(--ft-line-bright)',
+              color: 'var(--ft-text)',
+              fontFamily: 'var(--font-sans)',
+            }
+          }} />
         </Providers>
       </body>
     </html>
