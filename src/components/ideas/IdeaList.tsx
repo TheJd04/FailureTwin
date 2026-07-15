@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { IdeaCard } from "./IdeaCard";
 
-export async function IdeaList({ userId }: { userId: string }) {
+export async function IdeaList({ userId }: { userId: string | null }) {
   const ideas = await prisma.idea.findMany({
-    where: { userId },
+    where: userId ? { userId } : { userId: null },
     orderBy: { createdAt: "desc" },
   });
 

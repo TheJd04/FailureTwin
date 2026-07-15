@@ -8,20 +8,19 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
     const { ideaId, title, description, persona = "Default" } = await req.json();
 
-    // Ensure idea belongs to user
+    // Ensure idea belongs to user, or allow if it's an anonymous idea
     const existingIdea = await prisma.idea.findUnique({
       where: { id: ideaId },
     });
 
-    if (!existingIdea || existingIdea.userId !== session.user.id) {
-      return NextResponse.json({ error: "Idea not found or unauthorized" }, { status: 403 });
+    if (!existingIdea) {
+      return NextResponse.json({ error: "Idea not found" }, { status: 404 });
+    }
+    if (existingIdea.userId && existingIdea.userId !== session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;

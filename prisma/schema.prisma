@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
-  engineType = "library"
+  provider        = "prisma-client-js"
 }
 
 datasource db {
@@ -23,9 +22,9 @@ model Idea {
   description String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  userId      String
+  userId      String?
   isPublic    Boolean      @default(false)
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
   simulations Simulation[]
 }
 

@@ -7,11 +7,6 @@ import { revalidatePath } from "next/cache";
 
 export async function createIdea(formData: FormData) {
   const session = await getServerSession(authOptions);
-  
-  if (!session?.user?.id) {
-    return { error: "Unauthorized" };
-  }
-
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
 
@@ -23,7 +18,7 @@ export async function createIdea(formData: FormData) {
     data: {
       title,
       description,
-      userId: session.user.id,
+      userId: session?.user?.id || null,
     },
   });
 
@@ -33,11 +28,6 @@ export async function createIdea(formData: FormData) {
 
 export async function updateIdea(formData: FormData) {
   const session = await getServerSession(authOptions);
-  
-  if (!session?.user?.id) {
-    return { error: "Unauthorized" };
-  }
-
   const id = formData.get("id") as string;
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
@@ -46,13 +36,16 @@ export async function updateIdea(formData: FormData) {
     return { error: "Missing required fields" };
   }
 
-  // Ensure the idea belongs to the user
+  // Ensure the idea belongs to the user, or allow editing if it's an anonymous idea
   const existingIdea = await prisma.idea.findUnique({
     where: { id },
   });
 
-  if (!existingIdea || existingIdea.userId !== session.user.id) {
-    return { error: "Idea not found or unauthorized" };
+  if (!existingIdea) {
+    return { error: "Idea not found" };
+  }
+  if (existingIdea.userId && existingIdea.userId !== session?.user?.id) {
+    return { error: "Unauthorized" };
   }
 
   await prisma.idea.update({
@@ -66,11 +59,6 @@ export async function updateIdea(formData: FormData) {
 
 export async function deleteIdea(formData: FormData) {
   const session = await getServerSession(authOptions);
-  
-  if (!session?.user?.id) {
-    return { error: "Unauthorized" };
-  }
-
   const id = formData.get("id") as string;
 
   if (!id) {
@@ -81,8 +69,11 @@ export async function deleteIdea(formData: FormData) {
     where: { id },
   });
 
-  if (!existingIdea || existingIdea.userId !== session.user.id) {
-    return { error: "Idea not found or unauthorized" };
+  if (!existingIdea) {
+    return { error: "Idea not found" };
+  }
+  if (existingIdea.userId && existingIdea.userId !== session?.user?.id) {
+    return { error: "Unauthorized" };
   }
 
   await prisma.idea.delete({
@@ -95,17 +86,15 @@ export async function deleteIdea(formData: FormData) {
 
 export async function toggleShare(id: string, isPublic: boolean) {
   const session = await getServerSession(authOptions);
-  
-  if (!session?.user?.id) {
-    return { error: "Unauthorized" };
-  }
-
   const existingIdea = await prisma.idea.findUnique({
     where: { id },
   });
 
-  if (!existingIdea || existingIdea.userId !== session.user.id) {
-    return { error: "Idea not found or unauthorized" };
+  if (!existingIdea) {
+    return { error: "Idea not found" };
+  }
+  if (existingIdea.userId && existingIdea.userId !== session?.user?.id) {
+    return { error: "Unauthorized" };
   }
 
   await prisma.idea.update({
