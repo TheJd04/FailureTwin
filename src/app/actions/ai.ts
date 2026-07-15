@@ -8,16 +8,18 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function simulateFailureMode(ideaId: string, title: string, description: string) {
   const session = await getServerSession(authOptions);
-  // Check if idea exists and belongs to the user if user is logged in
+  
+  if (!session?.user?.id) {
+    return { error: "Unauthorized" };
+  }
+
+  // Ensure idea belongs to user
   const existingIdea = await prisma.idea.findUnique({
     where: { id: ideaId },
   });
 
-  if (!existingIdea) {
-    return { error: "Idea not found" };
-  }
-  if (existingIdea.userId && existingIdea.userId !== session?.user?.id) {
-    return { error: "Unauthorized" };
+  if (!existingIdea || existingIdea.userId !== session.user.id) {
+    return { error: "Idea not found or unauthorized" };
   }
 
   try {

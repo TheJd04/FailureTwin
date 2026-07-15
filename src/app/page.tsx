@@ -17,8 +17,11 @@ export default function Home() {
           A multi-agent failure-mode simulator for startup ideas. Stop guessing why your startup might fail. Let AI simulate the harsh reality of the market.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
-          <Link href="/dashboard">
-            <button className="ft-btn-primary w-full sm:w-auto text-lg px-8 py-3">ENTER MAINFRAME</button>
+          <Link href="/register">
+            <button className="ft-btn-primary w-full sm:w-auto text-lg px-8 py-3">Get Started</button>
+          </Link>
+          <Link href="/login">
+            <button className="ft-btn-ghost w-full sm:w-auto text-lg px-8 py-3">Login</button>
           </Link>
         </div>
       </div>

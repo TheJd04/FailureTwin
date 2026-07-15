@@ -14,9 +14,12 @@
     "@ai-sdk/react": "^4.0.30",
     "@base-ui/react": "^1.6.0",
     "@google/generative-ai": "^0.24.1",
+    "@neondatabase/serverless": "^1.1.0",
+    "@prisma/adapter-neon": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@types/bcrypt": "^6.0.0",
     "ai": "^7.0.28",
-    "bcryptjs": "^3.0.3",
+    "bcrypt": "^6.0.0",
     "bufferutil": "^4.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -35,7 +38,6 @@
     "ws": "^8.21.1"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

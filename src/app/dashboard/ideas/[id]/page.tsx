@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { notFound, redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { SimulateButton } from "@/components/ideas/SimulateButton";
@@ -10,6 +10,10 @@ import ReactMarkdown from "react-markdown";
 
 export default async function IdeaDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
 
   const idea = await prisma.idea.findUnique({
     where: { id: params.id },
@@ -24,7 +28,7 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
     notFound();
   }
 
-  if (idea.userId && idea.userId !== session?.user?.id) {
+  if (idea.userId !== session.user.id) {
     redirect("/dashboard");
   }
 

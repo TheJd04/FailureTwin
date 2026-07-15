@@ -28,8 +28,11 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/dashboard">
-                <button className="ft-btn-ghost">Dashboard</button>
+              <Link href="/login">
+                <button className="ft-btn-ghost">LOG IN</button>
+              </Link>
+              <Link href="/register">
+                <button className="ft-btn-primary">SIGN UP</button>
               </Link>
             </>
           )}

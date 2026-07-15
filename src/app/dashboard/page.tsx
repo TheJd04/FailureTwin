@@ -1,10 +1,15 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { CreateIdeaForm } from "@/components/ideas/CreateIdeaForm";
 import { IdeaList } from "@/components/ideas/IdeaList";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/login");
+  }
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-5xl ft-content">
@@ -16,7 +21,7 @@ export default async function DashboardPage() {
         <CreateIdeaForm />
       </div>
 
-      <IdeaList userId={session?.user?.id || null} />
+      <IdeaList userId={session.user.id} />
     </div>
   );
 }
