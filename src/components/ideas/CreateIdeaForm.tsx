@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createIdea } from "@/app/actions/ideas";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -24,7 +24,9 @@ export function CreateIdeaForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button>Add New Idea</Button>} />
+      <DialogTrigger className="ft-btn-primary">
+        Add New Idea
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create Startup Idea</DialogTitle>
@@ -45,7 +47,7 @@ export function CreateIdeaForm() {
               className="min-h-[100px]"
             />
           </div>
-          <Button type="submit" className="mt-2">Save Idea</Button>
+          <button type="submit" className="ft-btn-primary mt-2">Save Idea</button>
         </form>
       </DialogContent>
     </Dialog>

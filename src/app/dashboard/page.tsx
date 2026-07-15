@@ -12,11 +12,11 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+    <div className="container mx-auto px-4 py-12 max-w-5xl ft-content">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Your Startup Ideas</h1>
-          <p className="text-slate-500 mt-1">Manage and simulate failure modes for your ideas.</p>
+          <h1 className="text-4xl ft-wordmark">Your Startup Ideas</h1>
+          <p className="text-[var(--ft-text-dim)] mt-2">Manage and simulate failure modes for your ideas.</p>
         </div>
         <CreateIdeaForm />
       </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { simulateFailureMode } from "@/app/actions/ai";
-import { Button } from "@/components/ui/button";
+// using native buttons for theme
 
 export function SimulateButton({ ideaId, ideaTitle, ideaDescription }: { ideaId: string, ideaTitle: string, ideaDescription: string }) {
   const [loading, setLoading] = useState(false);
@@ -20,13 +20,13 @@ export function SimulateButton({ ideaId, ideaTitle, ideaDescription }: { ideaId:
 
   return (
     <div className="flex flex-col items-end gap-2">
-      <Button 
+      <button 
         onClick={handleSimulate} 
         disabled={loading}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white"
+        className="ft-btn-primary"
       >
         {loading ? "Simulating Failure Mode..." : "Run New Simulation"}
-      </Button>
+      </button>
       {error && <div className="text-red-500 text-sm">{error}</div>}
     </div>
   );
