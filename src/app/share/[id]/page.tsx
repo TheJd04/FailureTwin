@@ -65,8 +65,8 @@ export default async function PublicIdeaPage({ params }: { params: { id: string 
       
       <div className="mt-20 text-center pb-10">
         <p className="text-[var(--ft-text-dim)] mb-4">Want to stress test your own startup idea?</p>
-        <Link href="/register">
-          <button className="ft-btn-primary">Create Your Free Account</button>
+        <Link href="/dashboard">
+          <button className="ft-btn-primary">Enter Mainframe</button>
         </Link>
       </div>
     </div>
