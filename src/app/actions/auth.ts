@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { revalidatePath } from "next.cache";
+import { revalidatePath } from "next/cache";
 
 export async function registerUser(formData: FormData) {
   const email = formData.get("email") as string;
